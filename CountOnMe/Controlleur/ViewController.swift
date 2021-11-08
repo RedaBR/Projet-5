@@ -57,6 +57,7 @@ var objects = Elements()
         }
     }
     
+   
     
     
     @IBAction func tappedMultiplicationButton(_ sender: UIButton) {
@@ -66,6 +67,17 @@ var objects = Elements()
           alert()
         }
     }
+    
+    @IBAction func tappedDivision(_ sender: UIButton) {
+        
+            if objects.canAddOperator() {
+                textView.text.append(" / ")
+            } else { alert()
+                
+            }
+        
+    }
+    
     
 
     @IBAction func tappedEqualButton(_ sender: UIButton) {

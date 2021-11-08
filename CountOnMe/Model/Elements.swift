@@ -61,6 +61,9 @@ class Elements  {
         } else if operand == "-" {
             result = left - right
         }
+        if operand == "/" {
+            result = left / right
+        }
         
         operationsToReduce = Array(operationsToReduce.dropFirst(3))
         operationsToReduce.insert("\(result)", at: 0)
