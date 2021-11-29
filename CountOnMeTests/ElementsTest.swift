@@ -10,14 +10,6 @@ import XCTest
 
 class ElementsTest: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func testExample() throws {
 
             func testGivenElementsIsEmpty_WhenElementContainsOperations_ThenCorrectResultAffiched () {
@@ -39,14 +31,49 @@ class ElementsTest: XCTestCase {
             
         
         }
-
+        func testDivisionByZero () {
+            func testGivenElementsIsEmpty_WhenEelementsContainsNumberDivisedByZero_ThenAlertAffiched () {
+                let objects = Elements()
+                objects.elements = ["5/0"]
+                objects.updateElementsChoice(text: "5/0")
+                if !objects.canAddOperator() {
+                    XCTAssert(false, "Division par Zero impossible")
+                    
+                }
+            }
+            
+        }
+        func testInsufficientsOperations() {
+            func testGiventElementsIsEmpty_WhenElementsIsIncompleted_ThenAlertAffiched () {
+                let objects = Elements()
+                objects.elements = ["1+="]
+                objects.updateElementsChoice(text: "1+=")
+                if !objects.canAddOperator() {
+                    XCTAssert(false, "Un operateur est déja mis !")
+                    
+                }
+        }
             }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        func testComplexeOperations () {
+            func testGiventElementsIsEmpty_WhenElementsIsIcompleted_ThenAlertAffiched () {
+                let objects = Elements()
+                objects.elements = ["1+2+7X5/8="]
+                objects.updateElementsChoice(text: " 1 + 1 = ")
+                if objects.expressionHaveResult() {
+                    if objects.expressionHaveEnoughElement() {
+                        let result = objects.calculate()
+                        XCTAssertEqual(result, "7.375")
+                    } else {
+                        XCTAssertFalse(objects.expressionHaveEnoughElement())
+                    }
+                    
+                } else {
+                    XCTAssertFalse(objects.expressionHaveResult())
+                }
+                
+            }
         }
-    }
 
+    }
 }

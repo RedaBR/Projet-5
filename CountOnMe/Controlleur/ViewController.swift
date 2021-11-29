@@ -12,17 +12,24 @@ class ViewController: UIViewController {
     
 var objects = Elements()
     
+    @IBAction func reset() {
+        textView.text = ""
+        objects.elements.removeAll()
+    }
     
-    // View actions
+    
     @IBAction func tappedNumberButton(_ sender: UIButton) {
         guard let numberText = sender.title(for: .normal) else {
             return
         }
         
-        //objects.elements = ["1", "+", "2"]
-        //let result = objects.calculate()
-        
-        //objects.elements  = objects.elementsChoice(text:textView.text)
+        if (numberText == "0") {
+            
+            if !objects.canAddZero() {
+                alertDivisionByZero()
+                return
+            }
+        }
         
         if objects.expressionHaveResult() {
             textView.text = ""
@@ -35,23 +42,27 @@ var objects = Elements()
     
     @IBAction func tappedAdditionButton(_ sender: UIButton) {
         if objects.canAddOperator() {
+            
             textView.text.append(" + ")
+            objects.updateElementsChoice(text:textView.text)
         } else {
-           alert()
+            alert()
         }
     }
     
     @IBAction func tappedSubstractionButton(_ sender: UIButton) {
         if objects.canAddOperator() {
             textView.text.append(" - ")
+            objects.updateElementsChoice(text:textView.text)
         } else {
-        alert()
+            alert()
         }
     }
     
     @IBAction func tappedDivisionButton(_ sender: UIButton) {
         if objects.canAddOperator() {
             textView.text.append(" / ")
+            objects.updateElementsChoice(text:textView.text)
         } else { alert()
             
         }
@@ -63,8 +74,9 @@ var objects = Elements()
     @IBAction func tappedMultiplicationButton(_ sender: UIButton) {
         if objects.canAddOperator() {
             textView.text.append(" X ")
+            objects.updateElementsChoice(text:textView.text)
         } else {
-          alert()
+            alert()
         }
     }
     
@@ -72,6 +84,7 @@ var objects = Elements()
         
             if objects.canAddOperator() {
                 textView.text.append(" / ")
+                objects.updateElementsChoice(text:textView.text)
             } else { alert()
                 
             }
@@ -84,7 +97,7 @@ var objects = Elements()
         if objects.canAddOperator() {
             textView.text.append(" = ")
         }else {
-          alert()
+            alert()
             return
         }
         
@@ -110,12 +123,20 @@ var objects = Elements()
     @IBOutlet weak var textView: UITextView!
     @IBOutlet var numberButtons: [UIButton]!
      
+    
     func alert () {
         let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         self.present(alertVC, animated: true, completion: nil)
     }
     
-
+    func alertDivisionByZero () {
+        let alertVC = UIAlertController(title: "Zéro!", message: "Division par Zero impossible", preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        self.present(alertVC, animated: true, completion: nil)
+    }
+    
 }
+
+
 

@@ -13,30 +13,26 @@ class Elements  {
     
     var elements : [String] = []
     
-    func elementsChoice (text:String) -> [String]{
-        return text.split(separator: " ").map { "\($0)" }
-    }
-    
     func updateElementsChoice(text:String) {
         elements = text.split(separator: " ").map { "\($0)" }
     }
     
     // Error check computed variables
     func expressionIsCorrect() -> Bool {
-        return elements.last != "+" && elements.last != "-"
+        return elements.last != "+" && elements.last != "-" && elements.last != "X" && elements.last != "/"
     }
-    
-    func mulitiplication() -> Bool {
-        return elements.last != "+" && elements.last != "-"
-        
-    }
+
     
     func expressionHaveEnoughElement() -> Bool {
         return elements.count >= 3
     }
     
     func canAddOperator() ->Bool {
-        return elements.last != "+" && elements.last != "-"
+        return !elements.isEmpty && elements.last != "+" && elements.last != "-" && elements.last != "X" && elements.last != "/"
+    }
+    
+    func canAddZero() ->Bool {
+        return elements.last != "/"
     }
     
     func expressionHaveResult()-> Bool {
@@ -44,32 +40,65 @@ class Elements  {
        
     }
     
-    func calculate ()-> String {
-        operationsToReduce = elements
+    func managePriorities () -> [String] {
+        var listPrio = elements
         
-    while operationsToReduce.count > 3 {
-        let left = Int(operationsToReduce[0])!
-        let operand = operationsToReduce[1]
-        let right = Int(operationsToReduce[2])!
-        
-        var result = Int()
-        if operand == "X" {
-            result = left*right
-                  }
-        if operand  == "+" {
-            result = left + right
-        } else if operand == "-" {
-            result = left - right
-        }
-        if operand == "/" {
-            result = left / right
+        while listPrio.contains("X") {
+            
+            let operandIndex = listPrio.firstIndex(of: "X") // index = 8
+            let left = Float(listPrio[operandIndex! - 1])! // index 7 (4)
+            let right = Float(listPrio[operandIndex! + 1])! // index 9 (2)
+            
+            let result = left * right
+            
+            listPrio.remove(at: operandIndex! - 1)
+            listPrio.remove(at: operandIndex! - 1)
+            listPrio.remove(at: operandIndex! - 1)
+            
+            listPrio.insert("\(result)", at: operandIndex! - 1)
         }
         
-        operationsToReduce = Array(operationsToReduce.dropFirst(3))
-        operationsToReduce.insert("\(result)", at: 0)
+        while listPrio.contains("/") {
+            
+            let operandIndex = listPrio.firstIndex(of: "/") // index = 8
+            let left = Float(listPrio[operandIndex! - 1])! // index 7 (4)
+            let right = Float(listPrio[operandIndex! + 1])! // index 9 (2)
+            
+            let result = left / right
+            
+            listPrio.remove(at: operandIndex! - 1)
+            listPrio.remove(at: operandIndex! - 1)
+            listPrio.remove(at: operandIndex! - 1)
+            
+            listPrio.insert("\(result)", at: operandIndex! - 1)
+        }
+        
+        
+        return listPrio
+        
     }
+    func calculate ()-> String {
         
-       
+        operationsToReduce = managePriorities()
+        while operationsToReduce.count > 3 {
+           
+            let left = Float(operationsToReduce[0])!
+            let operand = operationsToReduce[1]
+            let right = Float(operationsToReduce[2])!
+            
+            var result = Float()
+            
+            if operand  == "+" {
+                result = left + right
+            }
+            else if operand == "-" {
+                result = left - right
+            }
+            
+            operationsToReduce = Array(operationsToReduce.dropFirst(3))
+            operationsToReduce.insert("\(result)", at: 0)
+        }
+        
         return operationsToReduce.first!
         
     }
